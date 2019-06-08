@@ -174,7 +174,7 @@
           <use xlink:href="#wizard-head" class="wizard-head"></use>
           <use xlink:href="#wizard-eyes" class="wizard-eyes"></use>
           <use xlink:href="#wizard-hands" class="wizard-hands"></use>
-        </g> .
+        </g>
       </svg>
     </div>
     <p class="setup-similar-label">Петр Петров</p>
@@ -183,23 +183,21 @@
 <script>
 var fireballSize = 22;
 var left;
-var  getFireballSpeed = function (left){
-var fireballSpeed = 2;
-if (left)  {
-  fireballSpeed = 5;
-}
-return fireballSpeed;
+var  getFireballSpeed = function (){
+  var left = true;
+  alert (true == 5);
+  alert (false == 2);
 };
 var wizardSpeed = 3;
 var wizardWidth = 70;
-var getWizardHeight = function (wizardHeight){
-  return (1.337 * wizardWidth)
+var getWizardHeight = function (){
+  return 1.337 * wizardWidth;
 };
 var getWizardX = function (width){
-  return (0.5 * (width - wizardWidth))
+  return 0.5 * (width - wizardWidth)
 };
 var getWizardY = function (height){
-  return (0.6667 * height  - getWizardHeight(wizardWidth))
+  return (2 / 3) * height - getWizardHeight();
 };
 </script>
 <script src="js/game.js">
