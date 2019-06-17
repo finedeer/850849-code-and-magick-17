@@ -1,58 +1,49 @@
 'use strict';
 var WINDOW_WIDTH = 420;
 var WINDOW_HEIGHT = 270;
+var CLOUD_X = 100;
+var CLOUD_Y = 10;
 var GISTO_WIDTH = 40;
+var MAX_GISTO_HEIGHT = 150;
+var GAP = 50;
+var SHADOW_GAP = 10;
+var TEXT_GAP = 20;
 
-window.renderStatistics = function(ctx, names, times) {
- names = ['Дудь', 'Котик', 'Трамп', 'Вы'];
- times = [3212, 8418, 5001, 1907];
- var gistoHeights = [];
- var getGistoHeight = function(times, gistoHeights){
-   var slowestTime = times[0];
-   for(var i = 0; i < times.length; i++){
-    var playerTime = times[i];
-    if(playerTime > slowestTime){
-        slowestTime = playerTime;
-        var slowpoke = playerTime;
-        var slowpokeProportion = 150 / slowpoke;
-        for(var j = 0; j <= times.length - 1; j++){
-          gistoHeights.push(Math.round(slowpokeProportion * times[j]));
-        }
+window.renderStatistics = function (ctx, names, times) {
+  var getSlowestTime = function (arr) {
+    var slowestTime = arr[0];
+
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i] > slowestTime) {
+        slowestTime = arr[i];
       }
-    };
-    return gistoHeights
+    }
+
+    return slowestTime;
   };
-  getGistoHeight(times, gistoHeights);
 
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(110, 20, WINDOW_WIDTH, WINDOW_HEIGHT);
+  ctx.fillRect(CLOUD_X + SHADOW_GAP, CLOUD_Y + SHADOW_GAP, WINDOW_WIDTH, WINDOW_HEIGHT);
 
   ctx.fillStyle = '#fff';
-  ctx.fillRect(100, 10, WINDOW_WIDTH, WINDOW_HEIGHT);
+  ctx.fillRect(CLOUD_X, CLOUD_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
 
   ctx.font = '16px PT Mono';
   ctx.textBaseline = 'hanging';
-  ctx.strokeText('Ура вы победили!', 120, 30);
-  ctx.strokeText('Список результатов:', 120, 50);
+  ctx.strokeText('Ура вы победили!', CLOUD_X + TEXT_GAP, CLOUD_Y + TEXT_GAP);
+  ctx.strokeText('Список результатов:', CLOUD_X + TEXT_GAP, CLOUD_Y + TEXT_GAP * 2);
 
+  var slowTime = getSlowestTime(times);
 
-  ctx.fillStyle = 'rgba(0, 0, 128, 0.5)';
-  ctx.fillRect(155, 100 + (150 - gistoHeights[0]), GISTO_WIDTH, gistoHeights[0]);
-  ctx.strokeText(names[0], 155, 255);
-  ctx.strokeText(times[0], 155, 85 + (150 - gistoHeights[0]));
-
-  ctx.fillStyle = 'rgba(0, 0, 128, 1)';
-  ctx.fillRect(245, 100 + (150 - gistoHeights[1]), GISTO_WIDTH, gistoHeights[1]);
-  ctx.strokeText(names[1], 245, 255);
-  ctx.strokeText(times[1], 245, 85 + (150 - gistoHeights[1]));
-
-  ctx.fillStyle = 'rgba(0, 0, 128, 0.8)';
-  ctx.fillRect(335, 100 + (150 - gistoHeights[2]), GISTO_WIDTH , gistoHeights[2]);
-  ctx.strokeText(names[2], 335, 255);
-  ctx.strokeText(times[2], 335, 85 + (150 - gistoHeights[2]));
-
-  ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-  ctx.fillRect(425, 100 + (150 - gistoHeights[3]), GISTO_WIDTH , gistoHeights[3]);
-  ctx.strokeText(names[3], 425, 255);
-  ctx.strokeText(times[3], 425, 85 + (150 - gistoHeights[3]));
+  for (var i = 0; i < names.length; i++) {
+    var opacity = ((Math.random() * 1) + 0.1).toFixed(1);
+    if (i === names.indexOf('Вы')) {
+      ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+    } else {
+      ctx.fillStyle = 'rgba(0, 0, 255,' + opacity + ')';
+    }
+    ctx.fillRect(155 + (GAP + GISTO_WIDTH) * i, 100 + (MAX_GISTO_HEIGHT - (times[i] * MAX_GISTO_HEIGHT / slowTime)), GISTO_WIDTH, (times[i] * MAX_GISTO_HEIGHT / slowTime));
+    ctx.strokeText(names[i], 155 + (GAP + GISTO_WIDTH) * i, 255);
+    ctx.strokeText(Math.round(times[i]), 155 + (GAP + GISTO_WIDTH) * i, 85 + (MAX_GISTO_HEIGHT - times[i] * MAX_GISTO_HEIGHT / slowTime));
+  }
 };
