@@ -8,25 +8,35 @@ var MAX_GISTO_HEIGHT = 150;
 var GAP = 50;
 var SHADOW_GAP = 10;
 var TEXT_GAP = 20;
+var GISTO_X = 155;
+var GISTO_Y = 100;
+var STAT_GAP = 5;
+var STAT_TIME_Y = 85;
+
+var getRandom = function (max, min) {
+var rand = min + Math.random() * (max - min);
+  rand = (rand).toFixed(1);
+  return rand;
+};
+var getSlowestTime = function (arr) {
+  var slowestTime = arr[0];
+
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] > slowestTime) {
+      slowestTime = arr[i];
+    }
+  }
+  return slowestTime;
+};
+var renderCloud = function (ctx, x, y, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, WINDOW_WIDTH, WINDOW_HEIGHT);
+};
 
 window.renderStatistics = function (ctx, names, times) {
-  var getSlowestTime = function (arr) {
-    var slowestTime = arr[0];
+  renderCloud(ctx, CLOUD_X + SHADOW_GAP, CLOUD_Y + SHADOW_GAP, 'rgba(0, 0, 0, 0.7)');
+  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
 
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i] > slowestTime) {
-        slowestTime = arr[i];
-      }
-    }
-
-    return slowestTime;
-  };
-
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.fillRect(CLOUD_X + SHADOW_GAP, CLOUD_Y + SHADOW_GAP, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(CLOUD_X, CLOUD_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
 
   ctx.font = '16px PT Mono';
   ctx.textBaseline = 'hanging';
@@ -36,14 +46,17 @@ window.renderStatistics = function (ctx, names, times) {
   var slowTime = getSlowestTime(times);
 
   for (var i = 0; i < names.length; i++) {
-    var opacity = ((Math.random() * 1) + 0.1).toFixed(1);
+    var opacity = getRandom(1, 0.1);
     if (i === names.indexOf('Вы')) {
       ctx.fillStyle = 'rgba(255, 0, 0, 1)';
     } else {
       ctx.fillStyle = 'rgba(0, 0, 255,' + opacity + ')';
     }
-    ctx.fillRect(155 + (GAP + GISTO_WIDTH) * i, 100 + (MAX_GISTO_HEIGHT - (times[i] * MAX_GISTO_HEIGHT / slowTime)), GISTO_WIDTH, (times[i] * MAX_GISTO_HEIGHT / slowTime));
-    ctx.strokeText(names[i], 155 + (GAP + GISTO_WIDTH) * i, 255);
-    ctx.strokeText(Math.round(times[i]), 155 + (GAP + GISTO_WIDTH) * i, 85 + (MAX_GISTO_HEIGHT - times[i] * MAX_GISTO_HEIGHT / slowTime));
+    var barHeight = times[i] * MAX_GISTO_HEIGHT / slowTime;
+    var barGap = MAX_GISTO_HEIGHT - barHeight;
+    var barStep = (GAP + GISTO_WIDTH) * i;
+    ctx.fillRect(GISTO_X + barStep, GISTO_Y + barGap, GISTO_WIDTH, barHeight);
+    ctx.strokeText(names[i], GISTO_X + barStep, GISTO_Y + MAX_GISTO_HEIGHT + STAT_GAP);
+    ctx.strokeText(Math.round(times[i]), GISTO_X + barStep, STAT_TIME_Y + barGap);
   }
 };
