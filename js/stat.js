@@ -8,13 +8,12 @@ var MAX_GISTO_HEIGHT = 150;
 var GAP = 50;
 var SHADOW_GAP = 10;
 var TEXT_GAP = 20;
-var GISTO_X = 155;
 var GISTO_Y = 100;
 var STAT_GAP = 5;
 var STAT_TIME_Y = 85;
 
 var getRandom = function (max, min) {
-var rand = min + Math.random() * (max - min);
+  var rand = min + Math.random() * (max - min);
   rand = (rand).toFixed(1);
   return rand;
 };
@@ -44,7 +43,7 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.strokeText('Список результатов:', CLOUD_X + TEXT_GAP, CLOUD_Y + TEXT_GAP * 2);
 
   var slowTime = getSlowestTime(times);
-
+  var GISTO_X = CLOUD_X + GAP + STAT_GAP;
   for (var i = 0; i < names.length; i++) {
     var opacity = getRandom(1, 0.1);
     if (i === names.indexOf('Вы')) {
