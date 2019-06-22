@@ -13,9 +13,7 @@ var STAT_GAP = 5;
 var STAT_TIME_Y = 85;
 
 var getRandom = function (max, min) {
-  var rand = min + Math.random() * (max - min);
-  rand = (rand).toFixed(1);
-  return rand;
+  return Math.floor(min + Math.random() * (max - min));
 };
 var getSlowestTime = function (arr) {
   var slowestTime = arr[0];
@@ -45,8 +43,8 @@ window.renderStatistics = function (ctx, names, times) {
   var slowTime = getSlowestTime(times);
   var GISTO_X = CLOUD_X + GAP + STAT_GAP;
   for (var i = 0; i < names.length; i++) {
-    var opacity = getRandom(1, 0.1);
-    if (i === names.indexOf('Вы')) {
+    var opacity = getRandom(100, 10) / 100;
+    if (names[i] === 'Вы') {
       ctx.fillStyle = 'rgba(255, 0, 0, 1)';
     } else {
       ctx.fillStyle = 'rgba(0, 0, 255,' + opacity + ')';
